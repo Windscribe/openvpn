@@ -3970,12 +3970,15 @@ options_warning_safe_scan2(const int msglevel,
      * OCC in a future version (because it's not useful). To reduce questions
      * when interoperating, we no longer printing a warning about it.
      */
+    /* adding link-mtu, comp-lzo and auth to the skip list */
     if (strprefix(p1, "key-method ")
         || strprefix(p1, "keydir ")
         || strprefix(p1, "proto ")
         || streq(p1, "tls-auth")
         || strprefix(p1, "tun-ipv6")
-        || strprefix(p1, "cipher "))
+        || strprefix(p1, "link-mtu"))
+        || strprefix(p1, "comp-lzo"))
+        || strprefix(p1, "auth"))
     {
         return;
     }
