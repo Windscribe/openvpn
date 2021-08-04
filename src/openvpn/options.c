@@ -3977,7 +3977,6 @@ options_warning_safe_scan2(const int msglevel,
         || streq(p1, "tls-auth")
         || strprefix(p1, "tun-ipv6")
         || strprefix(p1, "link-mtu")
-        || strprefix(p1, "comp-lzo")
         || strprefix(p1, "auth"))
     {
         return;
