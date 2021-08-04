@@ -476,7 +476,8 @@ multi_instance_string(const struct multi_instance *mi, bool null, struct gc_aren
         {
             buf_printf(&out, "%s/", cn);
         }
-        buf_printf(&out, "%s", mroute_addr_print(&mi->real, gc));
+        /* dont print source addresses in the log */
+        /* buf_printf(&out, "%s", mroute_addr_print(&mi->real, gc)); */
         return BSTR(&out);
     }
     else if (null)
@@ -858,6 +859,8 @@ multi_print_status(struct multi_context *m, struct status_output *so, const int 
         const struct hash_element *he;
 
         status_reset(so);
+        
+        const char *censored = "0.0.0.0";
 
         if (version == 1) /* WAS: m->status_file_version */
         {
@@ -877,7 +880,9 @@ multi_print_status(struct multi_context *m, struct status_output *so, const int 
                 {
                     status_printf(so, "%s,%s," counter_format "," counter_format ",%s",
                                   tls_common_name(mi->context.c2.tls_multi, false),
-                                  mroute_addr_print(&mi->real, &gc),
+                                  censored,
+                                  /* dont print source ip in status log */
+                                  /* mroute_addr_print(&mi->real, &gc), */
                                   mi->context.c2.link_read_bytes,
                                   mi->context.c2.link_write_bytes,
                                   time_string(mi->created, 0, false, &gc));
@@ -908,7 +913,9 @@ multi_print_status(struct multi_context *m, struct status_output *so, const int 
                                   mroute_addr_print(ma, &gc),
                                   flags,
                                   tls_common_name(mi->context.c2.tls_multi, false),
-                                  mroute_addr_print(&mi->real, &gc),
+                                  censored,
+                                  /* dont print source ip in status log */
+                                  /* mroute_addr_print(&mi->real, &gc), */
                                   time_string(route->last_reference, 0, false, &gc));
                 }
                 gc_free(&gc);
@@ -951,7 +958,7 @@ multi_print_status(struct multi_context *m, struct status_output *so, const int 
 #endif
                                   "%c%" PRIu32 "%c%s",
                                   sep, tls_common_name(mi->context.c2.tls_multi, false),
-                                  sep, mroute_addr_print(&mi->real, &gc),
+                                  sep, censored, /*mroute_addr_print(&mi->real, &gc),*/
                                   sep, print_in_addr_t(mi->reporting_addr, IA_EMPTY_IF_UNDEF, &gc),
                                   sep, print_in6_addr(mi->reporting_addr_ipv6, IA_EMPTY_IF_UNDEF, &gc),
                                   sep, mi->context.c2.link_read_bytes,
@@ -992,7 +999,7 @@ multi_print_status(struct multi_context *m, struct status_output *so, const int 
                     status_printf(so, "ROUTING_TABLE%c%s%s%c%s%c%s%c%s%c%u",
                                   sep, mroute_addr_print(ma, &gc), flags,
                                   sep, tls_common_name(mi->context.c2.tls_multi, false),
-                                  sep, mroute_addr_print(&mi->real, &gc),
+                                  sep, censored, /*mroute_addr_print(&mi->real, &gc),*/
                                   sep, time_string(route->last_reference, 0, false, &gc),
                                   sep, (unsigned int)route->last_reference);
                 }
