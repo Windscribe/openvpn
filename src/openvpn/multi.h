@@ -645,7 +645,14 @@ multi_process_outgoing_tun(struct multi_context *m, const unsigned int mpp_flags
     struct multi_instance *mi = m->pending;
     bool ret = true;
 
-    ASSERT(mi);
+    /* removing this assert due to crash in UDP server mode (likely our of order packets) */
+    /* ASSERT(mi); */
+    if ( !mi )
+    {
+       msg( M_NONFATAL, "multi_process_outgoing_tun: ERROR: mi=NULL" );
+       return false;
+    }
+
 #ifdef MULTI_DEBUG_EVENT_LOOP
     printf("%s -> TUN len=%d\n",
            id(mi),
